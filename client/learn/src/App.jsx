@@ -1,12 +1,17 @@
 /* eslint-disable no-unused-vars */
 import React from "react";
-
-import { motion } from "motion/react";
+import Navbar from "./components/Navbar";
+import "@mantine/core/styles.css";
+import { Routes, Route } from "react-router-dom";
+import Login from "./pages/Login";
 
 const App = () => {
   return (
     <div>
-      <motion.h3 animate={{ rotate: 360 }}>jai ho</motion.h3>
+      <Navbar />
+      <Routes>
+        <Route path="/Login" element={<Login />} />
+      </Routes>
     </div>
   );
 };
