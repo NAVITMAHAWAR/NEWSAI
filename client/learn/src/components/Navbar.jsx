@@ -5,6 +5,7 @@ import { motion } from "motion/react";
 import { Button } from "@mantine/core";
 import { X, Menu } from "lucide-react";
 const Navbar = () => {
+  // console.log(import.meta.env.VITE_API_URL);
   const [isOpen, setIsOpen] = useState(false);
   const handleClick = () => {
     setIsOpen(!isOpen);
@@ -37,11 +38,15 @@ const Navbar = () => {
         </ul>
         <div className="flex space-x-4 items-center justify-center">
           <Link to="/Login" className="hidden md:block">
-            <Button variant="white">Login</Button>
+            <Button variant="white" size="xs">
+              Login
+            </Button>
           </Link>
 
           <Link to="/Register" className="hidden md:block">
-            <Button variant="white">Register</Button>
+            <Button variant="white" size="xs">
+              Register
+            </Button>
           </Link>
 
           <button onClick={handleClick} className="md:hidden">
@@ -49,6 +54,21 @@ const Navbar = () => {
           </button>
         </div>
       </div>
+      {isOpen && (
+        <div>
+          <ul className="md:hidden flex flex-col gap-4">
+            {["Home", "Categories", "Channels", "About"].map((item) => (
+              <motion.li
+                whileHover={{ scale: 1.1 }}
+                transition={{ type: "spring", stiffness: 100 }}
+                key={item}
+              >
+                <Link to={`/${item.toLowerCase()}`}>{item}</Link>
+              </motion.li>
+            ))}
+          </ul>
+        </div>
+      )}
     </nav>
   );
 };

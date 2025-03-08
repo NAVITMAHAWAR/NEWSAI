@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const dbconnect = async () => {
+const dbConnect = async () => {
   try {
     const connection = await mongoose.connect(
       "mongodb://127.0.0.1:27017/news_point"
@@ -11,4 +11,4 @@ const dbconnect = async () => {
   }
 };
 
-export default dbconnect;
+export default dbConnect;
