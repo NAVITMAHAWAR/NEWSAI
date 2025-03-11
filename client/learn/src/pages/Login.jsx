@@ -1,18 +1,31 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Mail, Lock, Eye, EyeClosed } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { Button } from "@mantine/core";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Logine } from "../redux/Slice/authSlice";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [isEyeClick, setEyeClick] = useState(false);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { authenticated, preferences } = useSelector((state) => state.auth);
+  console.log(authenticated);
+
+  useEffect(() => {
+    if (authenticated && preferences.length > 0) {
+      navigate("/");
+    } else if (authenticated && preferences.length <= 0) {
+      navigate("/Prefrences");
+    }
+  }, [authenticated]);
 
   const LoginSchema = z.object({
     email: z

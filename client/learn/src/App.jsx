@@ -1,16 +1,20 @@
 /* eslint-disable no-unused-vars */
 // /* eslint-disable no-unused-vars */
 
-import React, { useEffect } from "react";
+import React, { useEffect, lazy, Suspense } from "react";
 import Navbar from "./components/Navbar";
 import { Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Prefrences from "./pages/Prefrences";
 import "@mantine/core/styles.css";
 import { Toaster } from "sonner";
 import { fetchProduct } from "./redux/Slice/ProductSlice";
 import { useDispatch, useSelector } from "react-redux";
+// import Homepage from "./pages/Homepage";
+import ProtectedRoutes from "./components/ProtectedRoutes";
+import Prefrences from "./pages/Prefrences";
+import LoadingSpinner from "./components/LoadingSpinner";
+const Homepage = lazy(() => import("./pages/Homepage"));
 
 const App = () => {
   return (
@@ -18,11 +22,17 @@ const App = () => {
       <Navbar />
 
       <Toaster />
-      <Prefrences />
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-      </Routes>
+      <Suspense fallback={<LoadingSpinner />}>
+        <Routes>
+          <Route element={<ProtectedRoutes />}>
+            <Route path="/" element={<Homepage />} />
+            <Route path="/Prefrences" element={<Prefrences />} />
+          </Route>
+
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+        </Routes>
+      </Suspense>
     </div>
   );
 };

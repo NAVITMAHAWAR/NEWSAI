@@ -1,10 +1,16 @@
 /* eslint-disable no-unused-vars */
+import { setCookie, removeCookie } from "../../utils/utils";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { toast } from "sonner";
+import { getCookie } from "../../utils/utils";
 
 const initialState = {
   loading: false,
+  authenticated: getCookie("isAuthenticated") || false,
+  name: getCookie("name") || null,
+  id: getCookie("id") || null,
+  preferences: [],
 };
 
 export const SignUp = createAsyncThunk(
@@ -36,7 +42,7 @@ export const Logine = createAsyncThunk(
         `${import.meta.env.VITE_API_URL}/auth/verify`,
         { withCredentials: true }
       );
-      return res.data;
+      return { ...res.data, ...verifyres.data };
     } catch (error) {
       return rejectWithValue(error);
     }
@@ -46,6 +52,19 @@ export const Logine = createAsyncThunk(
 const authSlice = createSlice({
   name: "auth",
   initialState,
+
+  reducers: {
+    signOut: function (state) {
+      state.authenticated = false;
+      state.id = null;
+      state.name = null;
+
+      removeCookie("isAuthenticated");
+      removeCookie("name");
+      removeCookie("id");
+    },
+  },
+
   extraReducers: (builder) => {
     builder
       .addCase(SignUp.pending, (state) => {
@@ -66,6 +85,16 @@ const authSlice = createSlice({
       })
       .addCase(Logine.fulfilled, (state, action) => {
         state.loading = false;
+        state.authenticated = action.payload.authenticated;
+        state.name = action.payload.name;
+        state.id = action.payload.id;
+        state.preferences = action.payload.preferences;
+
+        setCookie("isAuthenticated", action.payload.authenticated);
+        setCookie("name", action.payload.name);
+        setCookie("id", action.payload.id);
+        console.log(action.payload);
+        toast.success(action.payload.message);
       })
       .addCase(Logine.rejected, (state, action) => {
         state.loading = false;
@@ -74,3 +103,4 @@ const authSlice = createSlice({
 });
 
 export default authSlice.reducer;
+export const { signOut } = authSlice.actions;

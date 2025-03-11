@@ -23,18 +23,19 @@ export const login = async (req, res) => {
       "hello_this_string",
       { expiresIn: "1d" }
     );
+    console.log(User);
     res.cookie("token", token, {
       httpOnly: true,
     });
     res.status(200).json({
-      token,
+      preferences: User.preferences,
       message: "login SuccessFull",
     });
   } catch (error) {}
 };
 
 export const verify = async (req, res) => {
-  console.log("verify wali", req.user);
+  console.log("verify Wali", req.user);
   if (!req.user) {
   } else {
     return res.status(200).json({

@@ -4,7 +4,10 @@ import { Link } from "react-router-dom";
 import { motion } from "motion/react";
 import { Button } from "@mantine/core";
 import { X, Menu } from "lucide-react";
+import { useSelector } from "react-redux";
+import ProfileDropDown from "./ProfileDropDown";
 const Navbar = () => {
+  const { authenticated } = useSelector((state) => state.auth);
   // console.log(import.meta.env.VITE_API_URL);
   const [isOpen, setIsOpen] = useState(false);
   const handleClick = () => {
@@ -36,18 +39,23 @@ const Navbar = () => {
             </motion.li>
           ))}
         </ul>
-        <div className="flex space-x-4 items-center justify-center">
-          <Link to="/Login" className="hidden md:block">
-            <Button variant="white" size="xs">
-              Login
-            </Button>
-          </Link>
+        <div className="flex space-x-4 items-center ">
+          {!authenticated && (
+            <div className="flex gap-4">
+              <Link to="/Login" className="hidden md:block">
+                <Button variant="white" size="xs">
+                  Login
+                </Button>
+              </Link>
+              <Link to="/Register" className="hidden md:block">
+                <Button variant="white" size="xs">
+                  Register
+                </Button>
+              </Link>
+            </div>
+          )}
 
-          <Link to="/Register" className="hidden md:block">
-            <Button variant="white" size="xs">
-              Register
-            </Button>
-          </Link>
+          {authenticated && <ProfileDropDown />}
 
           <button onClick={handleClick} className="md:hidden">
             {isOpen ? <X /> : <Menu />}
