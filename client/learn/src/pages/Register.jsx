@@ -8,6 +8,8 @@ import { useForm } from "react-hook-form";
 import { SignUp } from "../redux/Slice/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { Loader } from "@mantine/core";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const Register = () => {
   const dispatch = useDispatch();
@@ -24,13 +26,61 @@ const Register = () => {
     setEyeClick2(!isEyeClick2);
   };
 
-  const { register, handleSubmit } = useForm();
+  const passwordSchema = z
+    .string()
+    .min(8, { message: "password should be  at least 8 characters long" })
+    .superRefine((value, ctx) => {
+      console.log(value);
+      if (!/[A-Z]/.test(value)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "must required at least  one upper case",
+        });
+      }
+      if (!/[a-z]/.test(value)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "must required at least one lower case",
+        });
+      }
+      if (!/[0-9]/.test(value)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "must required at least one digit ",
+        });
+      }
+    });
+
+  const registerSchema = z
+    .object({
+      name: z
+        .string()
+        .min(1, { message: "Name should contain at least 1 character" }),
+      email: z
+        .string()
+        .min(1, { message: "this field has to be filled" })
+        .email("this is not  a valid email"),
+      password: passwordSchema,
+
+      confirmPassword: z.string(),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: "Passwords do not match",
+      path: ["confirmPassword"],
+    });
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(registerSchema),
+  });
 
   const onSubmit = (data) => {
     console.log(data);
     dispatch(SignUp(data));
   };
-
   return (
     <div className="bg-gray-100 h-screen flex justify-center items-center">
       <motion.div
@@ -49,20 +99,28 @@ const Register = () => {
               type="name"
               placeholder="Full Name"
               className="focus w-full outline-none border-b border-gray-200"
-              required
+              // required
               {...register("name")}
             />
           </div>
+
+          {errors.name && (
+            <p className="text-sm text-red-500">{errors.name.message}</p>
+          )}
+
           <div className="flex gap-2 items-center border-b border-gray-200">
             <Mail className="text-gray-500" size={20} />
             <input
               type="email"
               placeholder="Email Address"
-              className="focus outline-none w-full "
-              required
+              // required
               {...register("email")}
+              className="w-full bg-transparent focus:outline-none border-none "
             />
           </div>
+          {errors.email && (
+            <p className="text-sm text-red-500">{errors.email.message}</p>
+          )}
 
           <div className="flex gap-2 relative items-center  border-b border-gray-200">
             <Lock className="text-gray-500" size={20} />
@@ -74,10 +132,13 @@ const Register = () => {
               type={isEyeClick ? "text" : "password"}
               placeholder="Password..."
               className="focus w-full outline-none border-b border-gray-200"
-              required
+              // required
               {...register("password")}
             />
           </div>
+          {errors.password && (
+            <p className="text-sm text-red-500">{errors.password.message}</p>
+          )}
 
           <div className="flex gap-2 relative items-center  border-b border-gray-200">
             <Lock className="text-gray-500" size={20} />
@@ -89,10 +150,16 @@ const Register = () => {
               type={isEyeClick2 ? "text" : "password"}
               placeholder="Confirm Password..."
               className="focus w-full outline-none border-b border-gray-200"
-              required
+              // required
               {...register("confirmPassword")}
             />
           </div>
+
+          {errors.confirmPassword && (
+            <p className="text-sm text-red-500">
+              {errors.confirmPassword.message}
+            </p>
+          )}
 
           <Button type="submit" fullWidth>
             {loading ? <Loader size={15} color="white" /> : "Signup"}

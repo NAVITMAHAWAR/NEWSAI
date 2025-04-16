@@ -3,6 +3,7 @@ import countReducer from "./counterSlice.js";
 import loadingReducer from "./loadingSlice.js";
 import productReducer from "./ProductSlice.js";
 import authReducer from "./authSlice.js";
+import newsReducer from "./newsSlice.js";
 
 const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ const store = configureStore({
     loading: loadingReducer,
     product: productReducer,
     auth: authReducer,
+    news: newsReducer,
   },
 });
 

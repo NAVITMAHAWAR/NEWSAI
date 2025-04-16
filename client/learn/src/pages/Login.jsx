@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Mail, Lock, Eye, EyeClosed } from "lucide-react";
 import { Link, Navigate } from "react-router-dom";
-import { Button } from "@mantine/core";
+import { Button, Loader } from "@mantine/core";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -16,7 +16,9 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { authenticated, preferences } = useSelector((state) => state.auth);
+  const { authenticated, preferences, loading } = useSelector(
+    (state) => state.auth
+  );
   console.log(authenticated);
 
   useEffect(() => {
@@ -73,7 +75,6 @@ const Login = () => {
               {...register("email")}
             />
           </div>
-
           {errors.email && (
             <p className="text-sm text-red-500">{errors.email.message}</p>
           )}
@@ -85,15 +86,25 @@ const Login = () => {
 
             <input
               type={isEyeClick ? "text" : "password"}
-              placeholder="Enter Password..."
               className="focus outline-none  w-full "
+              placeholder="Enter Password..."
               {...register("password")}
             />
           </div>
+          <div className="flex justify-between items-center">
+            <label className="flex items-center">
+              <input type="checkbox" className="mr-2" /> Keep me logged in
+            </label>
+            <a href="/ForgotPassword" className="text-sky-500 hover:underline">
+              Forgot Password?
+            </a>
+          </div>
+          {errors.password && (
+            <p className="text-sm text-red-500">{errors.password.message}</p>
+          )}
           <Button type="submit" fullWidth>
-            Login
+            {loading ? <Loader size={16} color="white" /> : "Login"}
           </Button>
-
           <Button
             fullWidth
             variant="gradient"
@@ -101,7 +112,6 @@ const Login = () => {
           >
             Google Sign In
           </Button>
-
           <p className="text-center text-gray-800">
             Don&apos;t have an account?{" "}
             <Link to="/Register" className="text-sky-500 hover:underline">

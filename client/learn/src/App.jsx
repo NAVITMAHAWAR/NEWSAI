@@ -3,7 +3,7 @@
 
 import React, { useEffect, lazy, Suspense } from "react";
 import Navbar from "./components/Navbar";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, PrefetchPageLinks } from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import "@mantine/core/styles.css";
@@ -14,7 +14,10 @@ import { useDispatch, useSelector } from "react-redux";
 import ProtectedRoutes from "./components/ProtectedRoutes";
 import Prefrences from "./pages/Prefrences";
 import LoadingSpinner from "./components/LoadingSpinner";
+import PreferenceProtectRoute from "./components/preferenceProtectRoute";
+import Footer from "./components/Footer";
 const Homepage = lazy(() => import("./pages/Homepage"));
+const Profile = lazy(() => import("./pages/Profile"));
 
 const App = () => {
   return (
@@ -25,14 +28,18 @@ const App = () => {
       <Suspense fallback={<LoadingSpinner />}>
         <Routes>
           <Route element={<ProtectedRoutes />}>
-            <Route path="/" element={<Homepage />} />
-            <Route path="/Prefrences" element={<Prefrences />} />
+            <Route path="/home" element={<Homepage />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route element={<PreferenceProtectRoute />}>
+              <Route path="/preferences" element={<Prefrences />} />
+            </Route>
           </Route>
 
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
         </Routes>
       </Suspense>
+      <Footer />
     </div>
   );
 };
