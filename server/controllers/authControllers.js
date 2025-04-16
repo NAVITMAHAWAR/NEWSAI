@@ -19,13 +19,14 @@ export const login = async (req, res) => {
     }
 
     const token = jwt.sign(
-      { id: User._id, name: User.name },
+      { id: User._id, name: User.name, email: User.email },
       "hello_this_string",
       { expiresIn: "1d" }
     );
     console.log(User);
     res.cookie("token", token, {
       httpOnly: true,
+      maxAge: 15 * 24 * 60,
     });
     res.status(200).json({
       preferences: User.preferences,
@@ -41,6 +42,7 @@ export const verify = async (req, res) => {
     return res.status(200).json({
       authenticated: true,
       id: req.user.id,
+      email: req.user.email,
       name: req.user.name,
     });
   }

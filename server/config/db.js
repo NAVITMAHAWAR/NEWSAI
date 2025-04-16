@@ -5,7 +5,7 @@ const dbConnect = async () => {
     const connection = await mongoose.connect(
       "mongodb://127.0.0.1:27017/news_point"
     );
-    console.log("mongodb connected ");
+    console.log("Mongodb Connected Successfully");
   } catch (error) {
     console.log(error);
   }
