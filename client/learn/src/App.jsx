@@ -16,6 +16,8 @@ import Prefrences from "./pages/Prefrences";
 import LoadingSpinner from "./components/LoadingSpinner";
 import PreferenceProtectRoute from "./components/preferenceProtectRoute";
 import Footer from "./components/Footer";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
+import AboutPage from "./components/AboutPage";
 const Homepage = lazy(() => import("./pages/Homepage"));
 const Profile = lazy(() => import("./pages/Profile"));
 
@@ -37,6 +39,8 @@ const App = () => {
 
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/ResetPassword" element={<ResetPasswordPage />} />
+          <Route path="About" element={<AboutPage />} />
         </Routes>
       </Suspense>
       <Footer />

@@ -7,6 +7,8 @@ import { BrowserRouter } from "react-router-dom";
 import { MantineProvider } from "@mantine/core";
 import { Provider } from "react-redux";
 import store from "./redux/Slice/store.js";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+const queryClient = new QueryClient();
 
 const rootElement = document.getElementById("root");
 if (rootElement) {
@@ -14,9 +16,11 @@ if (rootElement) {
     <StrictMode>
       <BrowserRouter>
         <Provider store={store}>
-          <MantineProvider>
-            <App />
-          </MantineProvider>
+          <QueryClientProvider client={queryClient}>
+            <MantineProvider>
+              <App />
+            </MantineProvider>
+          </QueryClientProvider>
         </Provider>
       </BrowserRouter>
     </StrictMode>

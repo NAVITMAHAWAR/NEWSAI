@@ -95,7 +95,7 @@ const Login = () => {
             <label className="flex items-center">
               <input type="checkbox" className="mr-2" /> Keep me logged in
             </label>
-            <a href="/ForgotPassword" className="text-sky-500 hover:underline">
+            <a href="/ResetPassword" className="text-sky-500 hover:underline">
               Forgot Password?
             </a>
           </div>
